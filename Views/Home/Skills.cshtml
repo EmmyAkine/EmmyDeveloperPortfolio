@@ -1,0 +1,39 @@
+﻿@model EmmyDeveloperPortfolio.Models.PortfolioModel
+
+@{
+    ViewData["Title"] = "Skills";
+}
+
+<section class="skills-section">
+    <div style="max-width:1152px; margin:0 auto; padding: 5rem 1.5rem;">
+
+        <!-- Section heading -->
+        <div class="section-heading">
+            <p class="eyebrow">02 — Skills</p>
+            <h2>Tools &amp; technologies</h2>
+            <p>A full-stack toolkit spanning game engines, backend frameworks, and the infrastructure that ships them to players and users.</p>
+        </div>
+
+        <div class="skills-grid">
+
+            @foreach (var group in Model.SkillGroups)
+            {
+                <div class="skill-card card-hover">
+                    <div class="skill-card-header">
+                        <span class="icon-badge">
+                            <i class="bi @group.Icon"></i>
+                        </span>
+                        <h3>@group.Title</h3>
+                    </div>
+                    <ul class="skill-tags">
+                        @foreach (var skill in group.Skills)
+                        {
+                            <li class="tag">@skill</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>

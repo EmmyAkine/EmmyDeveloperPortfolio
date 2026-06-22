@@ -1,0 +1,129 @@
+﻿@model EmmyDeveloperPortfolio.Models.TaxResultModel
+@{
+    ViewData["Title"] = "Tax Calculator";
+}
+
+<section class="tax-section">
+    <div style="max-width:1152px; margin:0 auto; padding: 5rem 1.5rem;">
+
+        <!-- Section heading -->
+        <div class="section-heading">
+            <p class="eyebrow">04 — Tool</p>
+            <h2>Income Tax Calculator</h2>
+            <p>
+                A small interactive tool to estimate Nigerian Personal Income Tax (PAYE)
+                using progressive bands and the Consolidated Relief Allowance.
+            </p>
+        </div>
+
+        <div class="tax-grid">
+
+            <!-- ===== INPUTS ===== -->
+            <div class="card">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;">
+                    <span class="icon-badge"><i class="bi bi-calculator"></i></span>
+                    <h3 style="margin:0; font-size:0.9375rem; font-weight:600;">Your details</h3>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                    <div>
+                        <form method="post" asp-action="Tax" asp-controller="Home">
+                            @Html.AntiForgeryToken()
+
+                            <div>
+                                <label class="tax-label" for="income">Annual gross income (₦)</label>
+                                <input class="tax-input" type="number" id="income" name="income" min="0"
+                                    value="@(Model != null ? Model.Income.ToString() : "")" placeholder="e.g. 5000000" />
+                            </div>
+                            <div>
+                                <label class="tax-label" for="pension">Annual pension contribution (₦)</label>
+                                <input class="tax-input" type="number" id="pension" name="pension" min="0"
+                                    value="@(Model != null ? Model.Pension.ToString() : "")" placeholder="e.g. 400000" />
+
+                            </div>
+                            <div>
+                                <label class="tax-label" for="rent">Annual rent paid (₦)</label>
+                                <input class="tax-input" type="number" id="rent" name="rent" min="0"
+                                    value="@(Model != null ? Model.Rent.ToString() : "")" placeholder="e.g. 600000" />
+                            </div>
+
+                            <button type="submit" class="btn-primary" style="margin-top:1rem;">
+                                <i class="bi bi-calculator"></i> Calculate
+                            </button>
+                        </form>
+                    </div>
+                    <div class="tax-info-box">
+                        <i class="bi bi-info-circle info-icon"></i>
+                        <p style="margin:0;">
+                            Estimates only, based on the Nigeria Tax Act 2025 (effective January 2026).
+                            The first ₦800,000 of taxable income is tax-free. Rent relief is 20% of annual
+                            rent paid, capped at ₦500,000. Pension contributions are fully deductible.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== RESULTS ===== -->
+                <div class="card">
+                <!-- Summary cards -->
+
+                
+                <div class="tax-result-cards">
+                    <div class="result-card">
+                        <p class="result-label">Total tax / year</p>
+                        <p class="result-value primary">₦@(Model != null ? Model.Tax.ToString("N0") : "0")</p>
+                    </div>
+                    <div class="result-card">
+                        <p class="result-label">Net income / year</p>
+                        <p class="result-value" id="resNet">₦@(Model != null ? Model.NetIncome.ToString("N0") : "0")</p>
+                    </div>
+                    <div class="result-card">
+                        <p class="result-label">Effective rate</p>
+                        <p class="result-value" id="resRate">@(Model != null ? Model.EffectiveTaxRate.ToString("N0") : "0")%</p>
+                    </div>
+                </div>
+
+                <!-- Meta row -->
+                <div class="tax-meta">
+                    <p>Pension Relief: <span id="resCra">₦@(Model != null ? Model.PensionRelief.ToString("N0") : "0")</span></p>
+                    <p>Rent Relief: <span id="resCra">₦@(Model != null ? Model.RentRelief.ToString("N0") : "0")</span></p>
+                    <p>Taxable income: <span id="resTaxable">₦@(Model != null ? Model.TaxableIncome.ToString("N0") : "0")</span></p>
+                    <p>Net / month: <span id="resMonth">₦@(Model != null ? Model.MonthlyNet.ToString("N0") : "0")</span></p>
+                </div>
+
+                <!-- Band breakdown -->
+                <p style="font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Tax band breakdown</p>
+                <table class="tax-table">
+                    <thead>
+                        <tr>
+                            <th>Band</th>
+                            <th>Rate</th>
+                            <th>Tax</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Breakdowns.Any())
+                        {
+                            @foreach (var band in Model.Breakdowns)
+                            {
+                                <tr>
+                                    <td>@band.BandLabel</td>
+                                    <td>@band.Rate%</td>
+                                    <td>₦@band.TaxFromBand.ToString("N0")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" style="text-align:center; color:var(--text-muted); padding:1rem;">
+                                    Enter your income above
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                </div>
+        </div>
+    </div>
+</section>

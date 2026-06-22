@@ -1,0 +1,64 @@
+﻿@model EmmyDeveloperPortfolio.Models.PortfolioModel
+
+@{
+    ViewData["Title"] = "About";
+}
+
+<section class="about-section">
+    <div style="max-width:1152px; margin:0 auto; padding: 5rem 1.5rem;">
+
+        <!-- Section heading -->
+        <div class="section-heading">
+            <p class="eyebrow">01 — About</p>
+            <h2>Who I am</h2>
+        </div>
+
+        <div class="about-grid">
+
+            <!-- Text -->
+            <div class="about-text">
+                <p>
+                    I&apos;m <span>@Model.Name</span>, a developer who lives at the intersection of
+                    interactive entertainment and solid backend engineering. By day I
+                    architect maintainable services with <span>ASP.NET Core</span>; by night I
+                    prototype game mechanics and ship polished experiences in <span>Unity</span>.
+                </p>
+                <p>
+                    My background in C# spans both worlds — readable code, predictable
+                    performance, and a focus on the end user, whether that&apos;s the feel
+                    of a jump or the latency of an endpoint.
+                </p>
+                <p>
+                    I studied <span>@Model.Department</span> at <span>@Model.University</span>,
+                    which gave me a rigorous foundation in systems thinking that I carry into
+                    every codebase I touch.
+                </p>
+                <p>
+                    When I&apos;m not coding, I&apos;m studying game design, exploring new
+                    .NET releases, and contributing to small open-source tools.
+                </p>
+            </div>
+
+            <!-- Highlights -->
+            <ul class="highlight-list">
+                <li class="highlight-item">
+                    <span class="check"><i class="bi bi-check-circle-fill"></i></span>
+                    Designing core gameplay loops, physics &amp; AI in Unity
+                </li>
+                <li class="highlight-item">
+                    <span class="check"><i class="bi bi-check-circle-fill"></i></span>
+                    Building RESTful &amp; gRPC APIs with ASP.NET Core
+                </li>
+                <li class="highlight-item">
+                    <span class="check"><i class="bi bi-check-circle-fill"></i></span>
+                    Optimizing performance for mobile and console
+                </li>
+                <li class="highlight-item">
+                    <span class="check"><i class="bi bi-check-circle-fill"></i></span>
+                    Clean architecture, SOLID principles &amp; unit testing
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</section>
