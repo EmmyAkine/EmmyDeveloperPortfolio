@@ -64,8 +64,10 @@ namespace EmmyDeveloperPortfolio.Services {
 
                 var bandResult = new TaxBreakdown {
                     BandLabel = taxBands[i].BandLabel,
+                    MaxTaxableAmount = taxBands[i].MaxTaxableAmount,
+                    AmountTaxedInBand = taxableAmountForBand,
                     Rate = taxBands[i].Rate,
-                    TaxFromBand = taxForBand
+                    TaxFromBand = taxForBand    
                 };
                 breakdowns.Add(bandResult);
 
