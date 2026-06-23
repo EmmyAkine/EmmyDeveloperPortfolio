@@ -1,6 +1,7 @@
 using EmmyDeveloperPortfolio.Data;
 using EmmyDeveloperPortfolio.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 namespace EmmyDeveloperPortfolio {
     public class Program {
@@ -24,7 +25,11 @@ namespace EmmyDeveloperPortfolio {
                 app.UseHsts();
             }
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(builder.Environment.WebRootPath, "uploads")),
+                RequestPath = "/uploads"
+            });
 
             app.UseHttpsRedirection();
             app.UseRouting();
