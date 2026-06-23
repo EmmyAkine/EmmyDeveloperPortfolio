@@ -25,4 +25,6 @@ public class TaxBreakdown {
     public decimal TaxFromBand { get; set; }
     public decimal MaxTaxableAmount { get; set; }
 
+    public decimal AmountTaxedInBand { get; set; }
+
 }

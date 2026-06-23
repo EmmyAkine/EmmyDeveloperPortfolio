@@ -1,21 +1,18 @@
+﻿using EmmyDeveloperPortfolio.DTO;
 using EmmyDeveloperPortfolio.Models;
 using EmmyDeveloperPortfolio.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using EmmyDeveloperPortfolio.Data;
 
-namespace EmmyDeveloperPortfolio.Controllers {
-    public class HomeController : Controller {
+namespace EmmyDeveloperPortfolio.Controllers.Api {
+    [Route("api/[Controller]/[action]")]
+    [ApiController]
+    public class PortfolioApiController : ControllerBase {
 
         private readonly PortfolioModel _portifolio;
         private readonly TaxServices _taxService;
-        private readonly AppDbContext _context;
-        private readonly IWebHostEnvironment _env;
 
-        public HomeController(TaxServices taxServices, AppDbContext context, IWebHostEnvironment env) {
+        public PortfolioApiController(TaxServices taxServices) {
             _taxService = taxServices;
-            _context = context;
-            _env = env;
             _portifolio = new PortfolioModel {
                 Name = "Emmanuel Oyebamiji",
                 Email = "emmanueloyebamiji03@gmail.com",
@@ -23,7 +20,7 @@ namespace EmmyDeveloperPortfolio.Controllers {
                 Department = "Electrical & Electronics Engineering",
 
                 SkillGroups = new List<SkillGroup> {
-                    new SkillGroup 
+                    new SkillGroup
                     {
                         Icon = "bi-controller",
                         Title  = "Game Development",
@@ -118,78 +115,37 @@ namespace EmmyDeveloperPortfolio.Controllers {
             };
         }
 
-        public IActionResult Index() {
-            return View();
+        [HttpGet]
+        public IActionResult Home() {
+            return Ok(_portifolio);
         }
 
+        [HttpGet]
         public IActionResult About() {
-
-            return View(_portifolio);
+            var aboutInfo = new List<string>() { _portifolio.Name, _portifolio.Email, _portifolio.University, _portifolio.Department };
+            return Ok(aboutInfo);
         }
 
+        [HttpGet]
         public IActionResult Skills() {
-            return View(_portifolio);
-        }
-
-        public IActionResult Projects() {
-            return View(_portifolio);
-        }
-
-        public IActionResult Experience() {
-            return View(_portifolio);
-        }
-
-        public IActionResult Contact() {
-            return View(_portifolio);
-        }
-
-        [HttpGet]
-        public IActionResult Tax() {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Tax(decimal income, decimal pension, decimal rent) {
-            var result = _taxService.Calculate(income, pension, rent);
-            Console.WriteLine($"Total Annual Tax: {result.Tax} Effective tax rate: {result.EffectiveTaxRate} and Monthly NetIncome: {result.MonthlyNet}");
-            return View(result);
-        }
-
-        [HttpGet]
-        public IActionResult Gallery() {
-            var items = _context.GalleryItems.OrderByDescending(g => g.UploadedAt).ToList();
-            return View(items);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Gallery(string title, IFormFile image) {
-
-            if (image != null && image.Length > 0) {
-                // Build a unique filename so two uploads don't overwrite each other
-                var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
-                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create)) {
-                    await image.CopyToAsync(stream);
-                }
-
-                // Save the record to the database
-                var galleryItem = new GalleryItem {
-                    Title = title,
-                    ImagePath = "/uploads/" + fileName
-                };
-
-                _context.GalleryItems.Add(galleryItem);
-                await _context.SaveChangesAsync();
+            if (_portifolio.SkillGroups == null || _portifolio.SkillGroups.Count <= 0) {
+                return NoContent();
             }
-
-            return RedirectToAction("Gallery");
+            return Ok(_portifolio.SkillGroups);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error() {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        [HttpGet]
+        public IActionResult Projects() {
+            if (_portifolio.Projects == null || _portifolio.Projects.Count <= 0) {
+                return NoContent();
+            }
+            return Ok(_portifolio.Projects);
+        }
+
+        [HttpGet]
+        public IActionResult Tax([FromQuery] TaxInputDto taxInputForm) {
+            var result = _taxService.Calculate(taxInputForm.Income, taxInputForm.Pension, taxInputForm.Rent);
+            return Ok(result);
         }
     }
 }

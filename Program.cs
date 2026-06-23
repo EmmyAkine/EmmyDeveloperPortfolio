@@ -14,6 +14,9 @@ namespace EmmyDeveloperPortfolio {
 
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
 
             var app = builder.Build();
 
@@ -24,6 +27,8 @@ namespace EmmyDeveloperPortfolio {
                 app.UseHsts();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseStaticFiles();
 
             app.UseHttpsRedirection();
@@ -36,6 +41,7 @@ namespace EmmyDeveloperPortfolio {
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+
 
             app.Run();
         }
