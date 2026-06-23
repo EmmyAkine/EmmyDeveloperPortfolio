@@ -177,7 +177,7 @@ namespace EmmyDeveloperPortfolio.Controllers {
                 // Save the record to the database
                 var galleryItem = new GalleryItem {
                     Title = title,
-                    ImagePath = "/uploads/" + fileName
+                    ImagePath = filePath
                 };
 
                 _context.GalleryItems.Add(galleryItem);
