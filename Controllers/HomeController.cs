@@ -10,10 +10,12 @@ namespace EmmyDeveloperPortfolio.Controllers {
         private readonly PortfolioModel _portifolio;
         private readonly TaxServices _taxService;
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public HomeController(TaxServices taxServices, AppDbContext context) {
+        public HomeController(TaxServices taxServices, AppDbContext context, IWebHostEnvironment env) {
             _taxService = taxServices;
             _context = context;
+            _env = env;
             _portifolio = new PortfolioModel {
                 Name = "Emmanuel Oyeamiji",
                 Email = "emmy@gmail.com",
@@ -165,7 +167,8 @@ namespace EmmyDeveloperPortfolio.Controllers {
             if (image != null && image.Length > 0) {
                 // Build a unique filename so two uploads don't overwrite each other
                 var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
-                var filePath = Path.Combine("wwwroot/uploads", fileName);
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+                var filePath = Path.Combine(uploadsFolder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create)) {
                     await image.CopyToAsync(stream);
