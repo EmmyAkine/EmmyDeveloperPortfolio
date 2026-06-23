@@ -1,0 +1,63 @@
+﻿@model List<EmmyDeveloperPortfolio.Models.GalleryItem>
+
+@{
+    ViewData["Title"] = "Gallery";
+}
+
+<section class="projects-section">
+    <div style="max-width:1152px; margin:0 auto; padding: 5rem 1.5rem;">
+
+        <div class="section-heading">
+            <p class="eyebrow">06 — Gallery</p>
+            <h2>Photo Gallery</h2>
+            <p>A collection of moments, snapshots, and visuals from my journey.</p>
+        </div>
+
+        <!-- Upload form -->
+        <div class="card" style="margin-top:2.5rem; margin-bottom:2.5rem;">
+            <form method="post" asp-action="Gallery" asp-controller="Home" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required
+                           placeholder="Give this photo a title" class="form-control-custom" />
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Choose an image</label>
+                    <input type="file" id="image" name="image" accept="image/*" required
+                           class="form-control-custom" />
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="bi bi-upload"></i> Upload
+                </button>
+            </form>
+        </div>
+
+        <!-- Gallery grid -->
+        <div class="projects-grid">
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="@item.ImagePath" alt="@item.Title" />
+                        </div>
+                        <div class="project-body">
+                            <h3 class="project-title">@item.Title</h3>
+                            <p class="project-desc">Uploaded @item.UploadedAt.ToString("MMM dd, yyyy")</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">No images uploaded yet. Be the first.</p>
+            }
+        </div>
+
+    </div>
+</section>

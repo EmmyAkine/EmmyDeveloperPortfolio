@@ -1,4 +1,6 @@
+using EmmyDeveloperPortfolio.Data;
 using EmmyDeveloperPortfolio.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmmyDeveloperPortfolio {
     public class Program {
@@ -9,6 +11,9 @@ namespace EmmyDeveloperPortfolio {
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddSingleton<TaxServices>();
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 

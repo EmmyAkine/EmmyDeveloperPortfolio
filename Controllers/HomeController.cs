@@ -2,16 +2,18 @@ using EmmyDeveloperPortfolio.Models;
 using EmmyDeveloperPortfolio.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using EmmyDeveloperPortfolio.Data;
 
 namespace EmmyDeveloperPortfolio.Controllers {
     public class HomeController : Controller {
 
         private readonly PortfolioModel _portifolio;
         private readonly TaxServices _taxService;
+        private readonly AppDbContext _context;
 
-        public HomeController(TaxServices taxServices) {
+        public HomeController(TaxServices taxServices, AppDbContext context) {
             _taxService = taxServices;
-
+            _context = context;
             _portifolio = new PortfolioModel {
                 Name = "Emmanuel Oyeamiji",
                 Email = "emmy@gmail.com",
@@ -149,6 +151,37 @@ namespace EmmyDeveloperPortfolio.Controllers {
             var result = _taxService.Calculate(income, pension, rent);
             Console.WriteLine($"Total Annual Tax: {result.Tax} Effective tax rate: {result.EffectiveTaxRate} and Monthly NetIncome: {result.MonthlyNet}");
             return View(result);
+        }
+
+        [HttpGet]
+        public IActionResult Gallery() {
+            var items = _context.GalleryItems.OrderByDescending(g => g.UploadedAt).ToList();
+            return View(items);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Gallery(string title, IFormFile image) {
+
+            if (image != null && image.Length > 0) {
+                // Build a unique filename so two uploads don't overwrite each other
+                var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                var filePath = Path.Combine("wwwroot/uploads", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create)) {
+                    await image.CopyToAsync(stream);
+                }
+
+                // Save the record to the database
+                var galleryItem = new GalleryItem {
+                    Title = title,
+                    ImagePath = "/uploads/" + fileName
+                };
+
+                _context.GalleryItems.Add(galleryItem);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Gallery");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
