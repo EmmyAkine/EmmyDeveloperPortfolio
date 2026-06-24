@@ -114,8 +114,37 @@ namespace EmmyDeveloperPortfolio.Controllers {
                         GitHubUrl   = "https://github.com/EmmyAkine",
                         LiveUrl     = ""
                     },
+                },
+                Experiences = new List<ExperienceItem>() {
+                    new ExperienceItem 
+                    {
+                        Company = "Pixel Forge Studios",
+                        Role = "Unity Game Developer",
+                        Duration = "Mar 2024 — Present",
+                        Description = "Built core gameplay systems for a 3D platformer using Unity and C#, including custom character controllers, physics-based puzzles, and a save/load system. Collaborated with a small team of 4 to ship two title updates."
+                    },
+                    new ExperienceItem
+                    {
+                        Company = "Freelance",
+                        Role = "ASP.NET Backend Developer",
+                        Duration = "Jan 2025 — Aug 2025",
+                        Description = "Designed and built REST APIs for a logistics tracking client using ASP.NET Core and Entity Framework, including authentication, order status endpoints, and Swagger documentation for their mobile team."
+                    },
+                    new ExperienceItem
+                    {
+                        Company = "FUOYE Tech Community",
+                        Role = "Student Developer & Mentor",
+                        Duration = "Sep 2023 — Dec 2024",
+                        Description = "Taught introductory C# and game development workshops to fellow students, ran weekly coding sessions, and helped organize a campus-wide hackathon with over 60 participants."
+                    },
+                    new ExperienceItem
+                    {
+                        Company = "Bincom Academy",
+                        Role = "C# Beginner Class — Student",
+                        Duration = "2026",
+                        Description = "Currently building this portfolio as a live training project — covering ASP.NET Core MVC, SQL Server, Web APIs, CI/CD with Azure DevOps, and SOLID principles."
+                    }
                 }
-
             };
         }
 
@@ -137,7 +166,7 @@ namespace EmmyDeveloperPortfolio.Controllers {
         }
 
         public IActionResult Experience() {
-            return View(_portfolio);
+            return View(_portfolio.Experiences);
         }
 
         [HttpGet]

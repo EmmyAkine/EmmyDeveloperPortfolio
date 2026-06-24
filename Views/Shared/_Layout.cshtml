@@ -1,10 +1,19 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] — Emmanuel Oyebamiji</title>
     <meta name="description" content="Portfolio of Emmanuel Oyebamiji, a Unity game developer and ASP.NET backend engineer." />
+
+    <!-- Set theme BEFORE first paint, no flash of wrong theme -->
+    <script>
+            (function () {
+                var match = document.cookie.match(/(?:^|; )theme=([^;]*)/);
+                var saved = match ? decodeURIComponent(match[1]) : 'dark';
+                document.documentElement.setAttribute('data-theme', saved);
+            })();
+    </script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,14 +43,21 @@
                 <li><a href="@Url.Action("Index", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">Home</a></li>
                 <li><a href="@Url.Action("About", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "About" ? "active" : "")">About</a></li>
                 <li><a href="@Url.Action("Skills", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Skills" ? "active" : "")">Skills</a></li>
+                <li><a href="@Url.Action("Experience", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Experience" ? "active" : "")">Experience</a></li>
                 <li><a href="@Url.Action("Projects", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Projects" ? "active" : "")">Projects</a></li>
+                <li><a href="@Url.Action("Gallery", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Gallery" ? "active" : "")">Gallery</a></li>
                 <li><a href="@Url.Action("Tax", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Tax" ? "active" : "")">Tax Calculator</a></li>
-                <li><a href="@Url.Action("Gallery", "Home")">Gallery</a></li>
-                <li><a href="@Url.Action("Contact", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" ? "active" : "")">Contact</a></li>
+            <li><a href="@Url.Action("Contact", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" ? "active" : "")">Contact</a></li>
             </ul>
 
-            <!-- Hire Me -->
+            <!-- Hire Me + theme toggle -->
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <button class="theme-toggle d-none d-md-inline-flex" id="themeToggle" aria-label="Toggle dark/light theme">
+                    <i class="bi bi-sun-fill icon-sun"></i>
+                <i class="bi bi-moon-stars-fill icon-moon"></i>
+                </button>
             <a href="@Url.Action("Contact", "Home")" class="btn-hire d-none d-md-inline-flex">Hire Me</a>
+            </div>
 
             <!-- Mobile toggle -->
                 <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
@@ -55,11 +71,19 @@
                 <li><a href="@Url.Action("Index", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">Home</a></li>
                 <li><a href="@Url.Action("About", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "About" ? "active" : "")">About</a></li>
                 <li><a href="@Url.Action("Skills", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Skills" ? "active" : "")">Skills</a></li>
+                <li><a href="@Url.Action("Experience", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Experience" ? "active" : "")">Experience</a></li>
                 <li><a href="@Url.Action("Projects", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Projects" ? "active" : "")">Projects</a></li>
+                <li><a href="@Url.Action("Gallery", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Gallery" ? "active" : "")">Gallery</a></li>
                 <li><a href="@Url.Action("Tax", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Tax" ? "active" : "")">Tax Calculator</a></li>
                 <li><a href="@Url.Action("Contact", "Home")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" ? "active" : "")">Contact</a></li>
-                <li><a href="@Url.Action("Gallery", "Home")">Gallery</a></li>
                 <li><a href="@Url.Action("Contact", "Home")" class="btn-hire">Hire Me</a></li>
+                    <li>
+                        <button class="theme-toggle" id="themeToggleMobile" aria-label="Toggle dark/light theme" style="justify-content:center;">
+                        <i class="bi bi-sun-fill icon-sun"></i>&nbsp;
+                        <i class="bi bi-moon-stars-fill icon-moon"></i>&nbsp;
+                    <span style="margin-left:0.4rem; font-size:0.875rem;">Toggle theme</span>
+                </button>
+            </li>
         </ul>
     </div>
     </header>
@@ -76,7 +100,7 @@
             &copy; @DateTime.Now.Year Emmanuel Oyebamiji. Built with ASP.NET Core MVC.
             </p>
                 <div class="footer-social">
-                    <a href="https://github.com/EmmyAkine" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-btn">
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-btn">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.16-.02-2.1-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.07 11.07 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.05.78 2.12 0 1.53-.01 2.77-.01 3.15 0 .31.21.68.8.56A11.53 11.53 0 0 0 23.5 12.02C23.5 5.74 18.27.5 12 .5Z" />
                 </svg>
@@ -86,7 +110,7 @@
                     <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.55V9h3.57v11.45ZM22.22 0H1.77C.8 0 0 .78 0 1.74v20.52C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.74V1.74C24 .78 23.2 0 22.22 0Z" />
                 </svg>
                 </a>
-                    <a href="mailto:emmanueloyebamiji03@gmail.com" aria-label="Email" class="social-btn">
+                    <a href="mailto:emmy@gmail.com" aria-label="Email" class="social-btn">
                 <i class="bi bi-envelope"></i>
             </a>
         </div>
@@ -120,6 +144,20 @@
                     toggle.setAttribute('aria-expanded', false);
                 });
         });
+
+            // Dark/Light theme toggle
+            function setTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                document.cookie = 'theme=' + encodeURIComponent(theme) + ';path=/;max-age=31536000';
+        }
+
+            function toggleTheme() {
+                var current = document.documentElement.getAttribute('data-theme');
+                setTheme(current === 'dark' ? 'light' : 'dark');
+        }
+
+            document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+        document.getElementById('themeToggleMobile')?.addEventListener('click', toggleTheme);
     </script>
 
 @await RenderSectionAsync("Scripts", required: false)

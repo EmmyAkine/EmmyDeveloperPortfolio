@@ -6,5 +6,6 @@
         public string Department { get; set; } = "";
         public List<SkillGroup> SkillGroups { get; set; } = [];
         public List<ProjectModel> Projects { get; set; } = [];
+        public List<ExperienceItem> Experiences { get; set; } = [];
     }
 }

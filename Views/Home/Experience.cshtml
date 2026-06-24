@@ -1,1 +1,43 @@
-﻿
+﻿@model List<EmmyDeveloperPortfolio.Models.ExperienceItem>
+
+@{
+    ViewData["Title"] = "Experience";
+}
+
+<section class="about-section">
+    <div style="max-width:1152px; margin:0 auto; padding: 5rem 1.5rem;">
+
+        <div class="section-heading">
+            <p class="eyebrow">02b — Experience</p>
+            <h2>Where I&apos;ve worked</h2>
+            <p>A timeline of roles, projects, and the things I&apos;ve learned along the way.</p>
+        </div>
+
+        <div style="margin-top:2.5rem; display:flex; flex-direction:column; gap:1.25rem;">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="card" style="display:flex; gap:1.25rem; align-items:flex-start;">
+                        <span class="icon-badge" style="margin-top:0.15rem;">
+                            <i class="bi bi-briefcase-fill"></i>
+                        </span>
+                        <div>
+                            <div style="display:flex; flex-wrap:wrap; align-items:baseline; gap:0.5rem; margin-bottom:0.25rem;">
+                                <h3 style="margin:0; font-size:1.05rem; font-weight:600; color:var(--text);">@item.Role</h3>
+                                <span class="text-muted" style="font-size:0.875rem;">@@ @item.Company</span>
+                            </div>
+                            <p class="font-mono text-primary" style="font-size:0.75rem; margin:0 0 0.5rem;">@item.Duration</p>
+                            <p class="text-muted" style="font-size:0.9rem; line-height:1.65; margin:0;">@item.Description</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">No experience entries added yet.</p>
+            }
+        </div>
+
+    </div>
+</section>
