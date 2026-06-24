@@ -6,5 +6,6 @@ namespace EmmyDeveloperPortfolio.Data {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<GalleryItem> GalleryItems { get; set; }
+        public DbSet<ContactMessage> ContactMessages { get; set; }
     }
 }

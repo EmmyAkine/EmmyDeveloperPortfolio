@@ -18,6 +18,7 @@ namespace EmmyDeveloperPortfolio {
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSession();
 
 
             var app = builder.Build();
@@ -38,6 +39,7 @@ namespace EmmyDeveloperPortfolio {
                 RequestPath = "/uploads"
             });
 
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseRouting();
 

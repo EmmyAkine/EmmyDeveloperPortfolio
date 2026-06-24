@@ -2,12 +2,12 @@
 
 @{
     ViewData["Title"] = "Contact";
+    bool showSuccess = TempData["ContactSuccess"] != null;
 }
 
 <section class="contact-section">
     <div style="max-width:1152px; margin:0 auto; padding: 5rem 1.5rem;">
 
-        <!-- Section heading -->
         <div class="section-heading">
             <p class="eyebrow">05 — Contact</p>
             <h2>Let&apos;s build something</h2>
@@ -16,7 +16,6 @@
 
         <div class="contact-grid">
 
-            <!-- Info cards -->
             <div class="contact-info-cards">
                 <div class="contact-info-card">
                     <span class="icon-badge"><i class="bi bi-envelope"></i></span>
@@ -34,57 +33,48 @@
                 </div>
             </div>
 
-            <!-- Form -->
             <div class="contact-form-wrap">
 
-                <!-- Success message (hidden until submit) -->
-                <div class="contact-success" id="successMsg">
-                    <span class="check-big"><i class="bi bi-check-circle-fill"></i></span>
-                    <h3>Message sent!</h3>
-                    <p>Thanks! I&apos;ll be in touch soon.</p>
-                </div>
-
-                <!-- The form -->
-                <form id="contactForm" asp-action="Contact" asp-controller="Home" method="post">
-                    @Html.AntiForgeryToken()
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="senderName">Name</label>
-                            <input type="text" id="senderName" name="senderName" required
-                                   placeholder="Jane Doe" class="form-control-custom" />
-                        </div>
-                        <div class="form-group">
-                            <label for="senderEmail">Email</label>
-                            <input type="email" id="senderEmail" name="senderEmail" required
-                                   placeholder="jane@example.com" class="form-control-custom" />
-                        </div>
+                @if (showSuccess)
+                {
+                    <div class="contact-success" style="display:flex;">
+                        <span class="check-big"><i class="bi bi-check-circle-fill"></i></span>
+                        <h3>Message sent!</h3>
+                        <p>Thanks! I&apos;ll be in touch soon.</p>
                     </div>
+                }
+                else
+                {
+                    <form method="post" asp-action="Contact" asp-controller="Home">
+                        @Html.AntiForgeryToken()
 
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="5" required
-                                  placeholder="Tell me about your project..."
-                                  class="form-control-custom"></textarea>
-                    </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required
+                                       placeholder="Jane Doe" class="form-control-custom" />
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required
+                                       placeholder="jane@example.com" class="form-control-custom" />
+                            </div>
+                        </div>
 
-                    <button type="submit" class="btn-primary">
-                        <i class="bi bi-send"></i> Send Message
-                    </button>
-                </form>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" required
+                                      placeholder="Tell me about your project..."
+                                      class="form-control-custom"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <i class="bi bi-send"></i> Send Message
+                        </button>
+                    </form>
+                }
 
             </div>
         </div>
     </div>
 </section>
-
-@section Scripts {
-<script>
-    // Show success state after form submit (client-side preview)
-    document.getElementById('contactForm').addEventListener('submit', function (e) {
-        e.preventDefault(); // Remove this line once you wire up a real POST handler
-        this.style.display = 'none';
-        document.getElementById('successMsg').style.display = 'flex';
-    });
-</script>
-}

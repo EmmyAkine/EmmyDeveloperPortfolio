@@ -3,11 +3,12 @@ using EmmyDeveloperPortfolio.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using EmmyDeveloperPortfolio.Data;
+using EmmyDeveloperPortfolio.DTO;
 
 namespace EmmyDeveloperPortfolio.Controllers {
     public class HomeController : Controller {
 
-        private readonly PortfolioModel _portifolio;
+        private readonly PortfolioModel _portfolio;
         private readonly TaxServices _taxService;
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
@@ -16,7 +17,7 @@ namespace EmmyDeveloperPortfolio.Controllers {
             _taxService = taxServices;
             _context = context;
             _env = env;
-            _portifolio = new PortfolioModel {
+            _portfolio = new PortfolioModel {
                 Name = "Emmanuel Oyebamiji",
                 Email = "emmanueloyebamiji03@gmail.com",
                 University = "Federal University of Oye-Ekiti, Ekiti State, Nigeria",
@@ -124,24 +125,41 @@ namespace EmmyDeveloperPortfolio.Controllers {
 
         public IActionResult About() {
 
-            return View(_portifolio);
+            return View(_portfolio);
         }
 
         public IActionResult Skills() {
-            return View(_portifolio);
+            return View(_portfolio);
         }
 
         public IActionResult Projects() {
-            return View(_portifolio);
+            return View(_portfolio);
         }
 
         public IActionResult Experience() {
-            return View(_portifolio);
+            return View(_portfolio);
         }
 
+        [HttpGet]
         public IActionResult Contact() {
-            return View(_portifolio);
+            return View(_portfolio);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Contact(ContactFormDto formDto) {
+            var contactMessage = new ContactMessage {
+                Name = formDto.Name,
+                Email = formDto.Email,
+                Message = formDto.Message
+            };
+
+            _context.ContactMessages.Add(contactMessage);
+            await _context.SaveChangesAsync();
+
+            TempData["ContactSuccess"] = true;
+            return RedirectToAction("Contact");
+        }
+
 
         [HttpGet]
         public IActionResult Tax() {
@@ -149,9 +167,9 @@ namespace EmmyDeveloperPortfolio.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Tax(decimal income, decimal pension, decimal rent) {
-            var result = _taxService.Calculate(income, pension, rent);
-            Console.WriteLine($"Total Annual Tax: {result.Tax} Effective tax rate: {result.EffectiveTaxRate} and Monthly NetIncome: {result.MonthlyNet}");
+        public IActionResult Tax(TaxInputDto taxInputForm) {
+            var result = _taxService.Calculate(taxInputForm.Income, taxInputForm.Pension, taxInputForm.Rent);
+            //Console.WriteLine($"Total Annual Tax: {result.Tax} Effective tax rate: {result.EffectiveTaxRate} and Monthly NetIncome: {result.MonthlyNet}");
             return View(result);
         }
 
@@ -162,21 +180,21 @@ namespace EmmyDeveloperPortfolio.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> Gallery(string title, IFormFile image) {
+        public async Task<IActionResult> Gallery([FromForm] GalleryUploadDto uploadDto) {
 
-            if (image != null && image.Length > 0) {
+            if (uploadDto.Image != null && uploadDto.Image.Length > 0) {
                 // Build a unique filename so two uploads don't overwrite each other
-                var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                var fileName = Guid.NewGuid() + Path.GetExtension(uploadDto.Image.FileName);
                 var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
                 var filePath = Path.Combine(uploadsFolder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create)) {
-                    await image.CopyToAsync(stream);
+                    await uploadDto.Image.CopyToAsync(stream);
                 }
 
                 // Save the record to the database
                 var galleryItem = new GalleryItem {
-                    Title = title,
+                    Title = uploadDto.Title,
                     ImagePath = "/uploads/" + fileName
                 };
 
