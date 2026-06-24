@@ -19,13 +19,14 @@ steps:
 
 - script: dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/publish
   displayName: 'dotnet publish'
-- task: ArchiveFiles@2
-  displayName: 'Archive published output'
-  inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+
+# - task: ArchiveFiles@2
+#   displayName: 'Archive published output'
+#   inputs:
+#     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish'
+#     includeRootFolder: false
+#     archiveType: 'zip'
+#     archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
 
 - task: AzureRmWebAppDeployment@5
   inputs:
@@ -36,4 +37,4 @@ steps:
     deployToSlotOrASE: true
     ResourceGroupName: 'EmmyPortfolio_group'
     SlotName: 'production'
-    package: '$(Build.ArtifactStagingDirectory)/app.zip'
+    package: '$(Build.ArtifactStagingDirectory)/publish'
