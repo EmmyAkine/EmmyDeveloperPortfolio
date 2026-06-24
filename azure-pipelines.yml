@@ -28,4 +28,4 @@ steps:
     deployToSlotOrASE: true
     ResourceGroupName: 'EmmyPortfolio_group'
     SlotName: 'production'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
