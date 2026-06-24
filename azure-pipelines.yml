@@ -1,0 +1,39 @@
+# ASP.NET Core
+
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+
+- script: dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/publish
+  displayName: 'dotnet publish'
+- task: ArchiveFiles@2
+  displayName: 'Archive published output'
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+
+- task: AzureRmWebAppDeployment@5
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'emmyportfolio-connection'
+    appType: 'webApp'
+    WebAppName: 'EmmyPortfolio'
+    deployToSlotOrASE: true
+    ResourceGroupName: 'EmmyPortfolio_group'
+    SlotName: 'production'
+    package: '$(Build.ArtifactStagingDirectory)/app.zip'
