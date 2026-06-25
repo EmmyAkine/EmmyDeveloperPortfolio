@@ -214,7 +214,8 @@ namespace EmmyDeveloperPortfolio.Controllers {
             if (uploadDto.Image != null && uploadDto.Image.Length > 0) {
                 // Build a unique filename so two uploads don't overwrite each other
                 var fileName = Guid.NewGuid() + Path.GetExtension(uploadDto.Image.FileName);
-                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+                var uploadsFolder = Path.Combine(Environment.GetEnvironmentVariable("HOME")!, "data", "uploads");
+                Directory.CreateDirectory(uploadsFolder);
                 var filePath = Path.Combine(uploadsFolder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create)) {

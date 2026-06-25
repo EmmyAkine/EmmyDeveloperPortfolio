@@ -33,9 +33,12 @@ namespace EmmyDeveloperPortfolio {
             app.UseSwagger();
             app.UseSwaggerUI();
 
+            //Create the static file path needed for uploads
+            var uploadsPath = Path.Combine( Environment.GetEnvironmentVariable("HOME")!, "data", "uploads");
+            Directory.CreateDirectory(uploadsPath);
+
             app.UseStaticFiles(new StaticFileOptions {
-                FileProvider = new PhysicalFileProvider(
-                Path.Combine(builder.Environment.WebRootPath, "uploads")),
+                FileProvider = new PhysicalFileProvider( Path.Combine( Environment.GetEnvironmentVariable("HOME")!, "data", "uploads")),
                 RequestPath = "/uploads"
             });
 
